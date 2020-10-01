@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import pyautogui
 
+def nothing(x):
+    pass
+
 
 # Capturing video
 cap = cv2.VideoCapture(0)
