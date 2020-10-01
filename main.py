@@ -6,6 +6,14 @@ import pyautogui
 # Capturing video
 cap = cv2.VideoCapture(0)
 
+# creating trackbars
+cv2.namedWindow("tracking")
+cv2.createTrackbar("L_H", "tracking",0,255,nothing)
+cv2.createTrackbar("L_S", "tracking",0,255,nothing)
+cv2.createTrackbar("L_V", "tracking",0,255,nothing)
+cv2.createTrackbar("U_H", "tracking",255,255,nothing)
+cv2.createTrackbar("U_S", "tracking",255,255,nothing)
+cv2.createTrackbar("U_V", "tracking",255,255,nothing)
 
 # Checking if camera is open or not
 while cap.isOpened():
@@ -28,11 +36,21 @@ while cap.isOpened():
     # Apply Gaussian blur
     blur = cv2.GaussianBlur(crop_image, (3, 3), 0)
 
-    # Change color-space from BGR -> HSV
-    hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+    # getting trackbar values
+    l_H = cv2.getTrackbarPos("L_H", "tracking")
+    l_S = cv2.getTrackbarPos("L_S", "tracking")
+    l_V = cv2.getTrackbarPos("L_V", "tracking")
 
-    mask = cv2.inRange(hsv, np.array([165,119,91]), np.array([190,255,255]))
+    u_H = cv2.getTrackbarPos("U_H", "tracking")
+    u_S = cv2.getTrackbarPos("U_S", "tracking")
+    u_V = cv2.getTrackbarPos("U_V", "tracking")
+
+    l_b = np.array([l_H,l_S,l_V])
    
+    u_b = np.array([u_H,u_S,u_V])
+   
+    # creating mask 
+    mask = cv2.inRange(hsv, l_b, u_b)
 
     # Kernel for morphological transformation
     kernel = np.ones((5, 5))
